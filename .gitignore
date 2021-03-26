@@ -114,8 +114,3 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-
-# VSCode workspace file
-VSconfig.code-workspace
-.editorconfig
-.vscode/settings.json
