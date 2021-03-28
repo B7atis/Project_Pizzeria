@@ -153,7 +153,7 @@
       for(let paramId in thisProduct.data.params) {
 
         // determine param value, e.g. paramId = 'toppings', param = {label: 'Toppings', type: 'checkboxes'... }
-        const param = thisProduct.data.param[paramId];
+        const param = thisProduct.data.params[paramId];
         console.log(paramId, param);
 
         // for every option in this category
@@ -162,6 +162,27 @@
           // determine option value, e.g. optionId = 'olives', option = {label: 'Olives', proce: 2, default: true }
           const option = param.options[optionId];
           console.log(optionId, option);
+
+          // check if there is param with a name of paramId in formData and if it includes optionID
+          if(formData[paramId] && formData[paramId].includes(optionId)) {
+
+            // check if the option is not default
+            if(!option.default) {
+
+              // add option price to price variable
+              price = (option.price) + price;
+              console.log('1. new price to:', price);
+            }
+          } else {
+
+            // check if the option is default
+            if(option.default) {
+
+              // reduce price variable
+              price-= option.price;
+              console.log('2. option.price to:', option.price);
+            }
+          }
         }
       }
       // update calculated price in the HTML
