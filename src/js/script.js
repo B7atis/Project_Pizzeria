@@ -92,6 +92,7 @@
       thisProduct.formInputs = thisProduct.form.querySelectorAll(select.all.formInputs);
       thisProduct.cartButton = thisProduct.element.querySelector(select.menuProduct.cartButton);
       thisProduct.priceElem = thisProduct.element.querySelector(select.menuProduct.priceElem);
+      thisProduct.imageWrapper = thisProduct.element.querySelector(select.menuProduct.imageWrapper);
     }
 
     initAccordion(){
@@ -164,8 +165,9 @@
           console.log(optionId, option);
 
           // check if there is param with a name of paramId in formData and if it includes optionID
-          if(formData[paramId] && formData[paramId].includes(optionId)) {
-
+          // if(formData[paramId] && formData[paramId].includes(optionId)) {
+          const optionSelected = formData[paramId] && formData[paramId].includes(optionId);
+          if(optionSelected) {
             // check if the option is not default
             if(!option.default) {
 
@@ -181,6 +183,23 @@
               // reduce price variable
               price-= option.price;
               console.log('2. option.price to:', option.price);
+            }
+          }
+
+          // finding an image with class paramId-optionId in the image div
+          const optionImage = thisProduct.imageWrapper.querySelector('.' + paramId + '-' + optionId);
+          console.log('optionImage:', optionImage);
+
+          // check if it was found
+          if(optionImage) {
+
+            // check that the option is selected
+            if(optionSelected) {
+              
+              // If so, show this photo. If it is not, hide it
+              optionImage.classList.add(classNames.menuProduct.imageVisible);
+            } else {
+              optionImage.classList.remove(classNames.menuProduct.imageVisible);
             }
           }
         }
