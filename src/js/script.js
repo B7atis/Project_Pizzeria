@@ -172,7 +172,7 @@
             if(!option.default) {
 
               // add option price to price variable
-              price = (option.price) + price;
+              price = option.price + price;
               console.log('1. new price to:', price);
             }
           } else {
