@@ -175,6 +175,7 @@
       thisProduct.cartButton.addEventListener('click', function(event){
         event.preventDefault();
         thisProduct.processOrder();
+        thisProduct.addToCart();
       });
     }
 
@@ -256,6 +257,12 @@
 
       // update calculated price in the HTML
       thisProduct.priceElem.innerHTML = price;
+    }
+
+    addToCart(){
+      const thisProduct = this;
+
+      app.cart.add(thisProduct);
     }
   }
 
@@ -348,6 +355,12 @@
       thisCart.dom.toggleTrigger.addEventListener('click', function () {
         thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
       });
+    }
+
+    add(menuProduct){
+      // const thisCart = this;
+
+      console.log('adding product', menuProduct);
     }
   }
 
