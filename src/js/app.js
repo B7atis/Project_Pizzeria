@@ -1,4 +1,4 @@
-import {settings, select} from './settings.js';
+import {settings, select, classNames} from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
 
@@ -9,6 +9,20 @@ const app = {
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
 
     thisApp.activatePage(thisApp.pages[0].id);
+
+    thisApp.nav = document.querySelector(select.containerOf.pages).children;
+  },
+
+  activatePage: function(pageId){
+    const thisApp = this;
+
+    /* add class "active" to matching pages, remove from non-matching */
+    for(let page of thisApp.pages){ 
+      page.classList.toggle(classNames.pages.active, page.id == pageId);
+    }
+
+    /* add class "active" to matching links, remove from non-matching */
+
   },
   initMenu: function(){
     const thisApp = this;
