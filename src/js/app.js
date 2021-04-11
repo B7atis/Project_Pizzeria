@@ -7,10 +7,28 @@ const app = {
     const thisApp = this;
 
     thisApp.pages = document.querySelector(select.containerOf.pages).children;
+    thisApp.navLinks = document.querySelectorAll(select.nav.links);
 
-    thisApp.activatePage(thisApp.pages[0].id);
+    const idFromHash = window.location.hash.replace('#/', '');
+    console.log('idFromHash', idFromHash);
 
-    thisApp.nav = document.querySelector(select.containerOf.pages).children;
+    thisApp.activatePage(idFromHash);
+
+    for(let link of thisApp.navLinks){
+      link.addEventListener('click', function(event){
+        const clickedElement = this;
+        event.preventDefault();
+
+        /* get page id from href attribute */
+        const id = clickedElement.getAttribute('href').replace('#', '');
+
+        /* run thisApp.activePage with that id */
+        thisApp.activatePage(id);
+
+        /* change URL hash */
+        window.location.hash = '#/' + id;
+      });
+    }
   },
 
   activatePage: function(pageId){
@@ -22,8 +40,14 @@ const app = {
     }
 
     /* add class "active" to matching links, remove from non-matching */
-
+    for(let link of thisApp.navLinks){ 
+      link.classList.toggle(
+        classNames.nav.active, 
+        link.getAttribute('href') == '#' + pageId
+      );
+    }
   },
+  
   initMenu: function(){
     const thisApp = this;
     // console.log('thisApp.data:', thisApp.data);
@@ -43,7 +67,7 @@ const app = {
         return rawResponse.json();
       })
       .then(function(parsedResponse){
-        console.log('parsedResponse', parsedResponse);
+        // console.log('parsedResponse', parsedResponse);
 
         /* save parsedResponse as thisApp.data.products */
         thisApp.data.products = parsedResponse;
@@ -52,7 +76,7 @@ const app = {
         thisApp.initMenu();
       });
 
-    console.log('thisApp.data', JSON.stringify(thisApp.data));
+    //console.log('thisApp.data', JSON.stringify(thisApp.data));
 
     thisApp.data = {};
   },
@@ -79,9 +103,7 @@ const app = {
     // console.log('templates:', templates);
 
     thisApp.initPages();
-
-    thisApp.initData();
-      
+    thisApp.initData(); 
     thisApp.initCart();
   },
 };
