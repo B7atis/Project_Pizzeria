@@ -35,7 +35,7 @@ class Booking {
   initWidgets(){
     const thisBooking = this;
 
-    /* dodaj właściwość dom.peopleAmount */
+    /* add a property dom.peopleAmount */
     thisBooking.peopleAmountWidget = new AmountWidget(thisBooking.dom.peopleAmount);
 
     /* add listener */
@@ -43,7 +43,7 @@ class Booking {
 
     });
 
-    /* dodaj właściwość dom.hoursAmount */
+    /* add a property dom.hoursAmount */
     thisBooking.hoursAmountWidget = new AmountWidget(thisBooking.dom.hoursAmount);
 
     /* add listener */
