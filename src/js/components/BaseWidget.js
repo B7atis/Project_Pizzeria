@@ -22,10 +22,10 @@ class BaseWidget{
     /* TODO: Add validation */
     if(thisWidget.correctValue !== newValue && !isNaN(newValue) && thisWidget.isValid(newValue)) {
       thisWidget.correctValue = newValue;
+      thisWidget.announce();
     }
       
     thisWidget.renderValue();
-    thisWidget.announce();
   }
 
   setValue(value){

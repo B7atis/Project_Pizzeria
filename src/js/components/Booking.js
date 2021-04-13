@@ -23,7 +23,7 @@ class Booking {
 
     /* add a property 'wrapper' to the object and assign a reference to it */
     thisBooking.dom.wrapper = element;
-    console.log(element);
+    // console.log(element);
 
     /* change the wrapper content to HTML code */
     thisBooking.dom.wrapper.innerHTML = generatedHTML;
