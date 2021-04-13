@@ -1,8 +1,19 @@
 import {settings, select, classNames} from './settings.js';
 import Product from './components/Product.js';
 import Cart from './components/Cart.js';
+import Booking from './components/Booking.js';
 
 const app = {
+  initBooking: function(){
+    const thisApp = this;
+    
+    /* find container of booking*/
+    thisApp.bookingContainer = document.querySelector(select.containerOf.booking);
+
+    /* create new instance for class Booking */
+    new Booking(thisApp.bookingContainer);
+  },
+
   initPages: function(){
     const thisApp = this;
 
@@ -110,6 +121,7 @@ const app = {
     // console.log('settings:', settings);
     // console.log('templates:', templates);
 
+    thisApp.initBooking();
     thisApp.initPages();
     thisApp.initData(); 
     thisApp.initCart();
