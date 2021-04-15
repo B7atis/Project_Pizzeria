@@ -8,6 +8,7 @@ class AmountWidget extends BaseWidget{
 
     thisWidget.getElements(element);
     thisWidget.initActions();
+    thisWidget.renderValue();
 
     // console.log('AmountWidget:', thisWidget);
     // console.log('construthisWidget.dom.linkDecrease arguments:', element);
