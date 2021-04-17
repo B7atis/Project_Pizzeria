@@ -256,14 +256,14 @@
       }
     ],
     "booking": [
-      {
-        "id": 1,
-        "date": "2021-04-14",
-        "hour": "24:05",
-        "table": 1,
-        "duration": 3,
-        "ppl": 4,
-        "starters": ["water"]
-      }
-    ]
-  }
+    {
+      "id": 1,
+      "date": "2021-04-14",
+      "hour": "24:05",
+      "table": 1,
+      "duration": 3,
+      "ppl": 4,
+      "starters": ["water"]
+    }
+  ]
+}
