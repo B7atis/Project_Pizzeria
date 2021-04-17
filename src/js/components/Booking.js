@@ -16,8 +16,8 @@ class Booking {
 
     /* call the getDate method with no argument */
     thisBooking.getData();
-    
 
+    thisBooking.initTables();
   }
 
   getData(){
@@ -131,6 +131,7 @@ class Booking {
   updateDOM(){
     const thisBooking = this;
 
+    thisBooking.selectedTable = null;
     thisBooking.date = thisBooking.datePicker.value;
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
 
@@ -145,6 +146,7 @@ class Booking {
     }
 
     for(let table of thisBooking.dom.tables){
+      table.classList.remove(classNames.booking.tableSelected);
       let tableId = table.getAttribute(settings.booking.tableIdAttribute);
       if(!isNaN(tableId)){
         tableId = parseInt(tableId);
@@ -186,6 +188,8 @@ class Booking {
     thisBooking.dom.hourPicker = thisBooking.dom.wrapper.querySelector(select.widgets.hourPicker.wrapper);
 
     thisBooking.dom.tables = thisBooking.dom.wrapper.querySelectorAll(select.booking.tables);
+
+    thisBooking.dom.floorPlan = element.querySelector(select.booking.floorPlan);
   }
 
   initWidgets(){
@@ -220,6 +224,49 @@ class Booking {
     thisBooking.dom.wrapper.addEventListener('updated', function(){
       thisBooking.updateDOM();
     });
+  }
+
+  initTables(){
+    const thisBooking = this;
+
+    for(let table of thisBooking.dom.tables){
+      table.addEventListener('click', function(event){
+        thisBooking.bookTable(event);
+      });
+      // if(table.classList.contains(classNames.booking.tableSelected)){
+      //   table.classList.remove(classNames.booking.tableSelected);
+      // }
+    }
+    thisBooking.selectedTable = null;
+  }
+
+  bookTable(event){
+    const thisBooking = this;
+    const clickedElement = event.target;
+    if(clickedElement.classList.contains(classNames.booking.table)){
+      const tableNumber = clickedElement.getAttribute('data-table');
+
+      if
+      (!clickedElement.classList.contains(classNames.booking.tableBooked)
+      && 
+      !clickedElement.classList.contains(classNames.booking.tableSelected)){
+        const activeTable = thisBooking.dom.wrapper.querySelector(select.booking.tableSelected);
+        if
+        (activeTable){
+          activeTable.classList.remove(classNames.booking.tableSelected);
+        }
+        clickedElement.classList.add(classNames.booking.tableSelected);
+        thisBooking.selectedTable = tableNumber;
+      } else if
+      (!clickedElement.classList.contains(classNames.booking.tableBooked)
+      && 
+      clickedElement.classList.contains(classNames.booking.tableSelected)){ 
+        clickedElement.classList.remove(classNames.booking.tableSelected);
+        thisBooking.selectedTable = null;
+      } else { 
+        alert('This table is not available at the moment. Please select another one.');
+      }
+    }
   }
 }
 
