@@ -325,13 +325,14 @@ class Booking {
       body: JSON.stringify(payload),
     };
 
-    fetch(url, options);
-
-    for (let item in payload){
-      thisBooking.makeBooked(item.date, utils.numberToHour(item.hour), item.duration, item.table);
-
-      location.reload();
-    }
+    fetch(url, options)
+      .then(function(response){
+        return response.json();
+      })
+      .then(function(parsedResponse){
+        thisBooking.makeBooked(parsedResponse.date, parsedResponse.hour, parsedResponse.duration, parsedResponse.table);
+        location.reload();
+      });
   }
 }
 
