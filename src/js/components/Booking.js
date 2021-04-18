@@ -9,6 +9,7 @@ class Booking {
     const thisBooking = this;
 
     thisBooking.booked = {};
+    thisBooking.starters = [];
 
     /* call the render method with an argument 'element' */
     thisBooking.render(element);
@@ -193,11 +194,11 @@ class Booking {
 
     thisBooking.dom.eachTables = thisBooking.dom.wrapper.querySelector(select.booking.eachTables);
     
-    thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.booking.home);
-    thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.booking.address);
+    thisBooking.dom.phone = thisBooking.dom.wrapper.querySelector(select.cart.phone);
+    thisBooking.dom.address = thisBooking.dom.wrapper.querySelector(select.cart.address);
 
-    thisBooking.dom.orderButton = thisBooking.dom.wrapper.querySelector(select.booking.orderButton);
-    thisBooking.dom.starters = thisBooking.dom.wrapper.querySelector(select.booking.starters);  
+    thisBooking.dom.checkboxes = thisBooking.dom.wrapper.querySelector('.booking-options');
+    thisBooking.dom.submit = thisBooking.dom.wrapper.querySelector('.booking-form');
   }
 
   initWidgets(){
@@ -244,33 +245,57 @@ class Booking {
       thisBooking.bookTable(event);
     });
 
-    thisBooking.dom.orderButton.addEventListener('click', function(event){
-      event.preventDefault();
-      thisBooking.sendBooking();
+    thisBooking.dom.checkboxes.addEventListener('click', function(event){
+      thisBooking.choseStarters(event);
     });
 
-    thisBooking.dom.starters.addEventListener('click', function(event){
-      const clickedElement = event.target;
-      if(clickedElement.tagName == 'INPUT' && clickedElement.type == 'checkbox' && clickedElement.name == 'starter'){
-        if(clickedElement.checked){
-          thisBooking.starters.push(clickedElement.value);
-        }
-      }
+    thisBooking.dom.submit.addEventListener('submit', function(event){
+      event.preventDefault();
+      thisBooking.sendOrder();
     });
   }
 
-  initTables(){
+  initTables(event){
     const thisBooking = this;
+    //console.log(event)
+    let clickedElement = event.toElement;
+    //console.log(clickedElement)
 
-    for(let table of thisBooking.dom.tables){
-      table.addEventListener('click', function(event){
-        thisBooking.bookTable(event);
-      });
-      // if(table.classList.contains(classNames.booking.tableSelected)){
-      //   table.classList.remove(classNames.booking.tableSelected);
-      // }
+    // check if clicked element is a table
+    if (clickedElement.classList.contains('table')){
+      // when it's a table, check if not contains class 'booked' and 'selected'
+
+      if ((!clickedElement.classList.contains(classNames.booking.tableBooked)) && (!clickedElement.classList.contains(classNames.booking.tableSelected))) {
+        // find data-table of clicked element
+        clickedElement.classList.add(classNames.booking.tableSelected);
+        let dataTable = clickedElement.getAttribute(settings.booking.tableIdAttribute);
+        //console.log(dataTable);
+        //add data-table of clicked element to new property in constructor
+        thisBooking.selectedPlace = dataTable;
+        //make a loop for a table to find a tableId (data-table)
+
+        for(let table of thisBooking.dom.tables){
+          let tableId = table.getAttribute(settings.booking.tableIdAttribute);
+
+          // check if any of the tables have already been selected
+          if (tableId !== dataTable && table.classList.contains(classNames.booking.tableSelected)){
+            // when yes, remove class 'selected' from the table and add class 'selected' to clicked element
+            table.classList.remove(classNames.booking.tableSelected);
+            clickedElement.classList.add(classNames.booking.tableSelected);
+          }
+        }
+      }
+
+      // when it's a table and was already clicked - remove class 'selected'
+      else if (clickedElement.classList.contains(classNames.booking.tableSelected)){
+        clickedElement.classList.remove(classNames.booking.tableSelected);
+      }
+
+      // when it's a table and was already booked - display alert
+      else if (clickedElement.classList.contains(classNames.booking.tableBooked)){
+        alert('This table is not available');
+      }
     }
-    thisBooking.selectedTable = null;
   }
 
   bookTable(event){
@@ -301,15 +326,31 @@ class Booking {
     }
   }
 
-  sendBooking(){
+  choseStarters(event){
+    const thisBooking = this;
+    if (event.target.tagName == 'INPUT' && event.target.type == 'checkbox'){
+      if (event.target.checked == true){
+        thisBooking.starters.push(event.target.value);
+      }
+      else if (event.target.checked == false){
+        const indexOfFilters = thisBooking.starters.indexOf(event.target.value);
+        thisBooking.starters.splice(indexOfFilters, 1);
+      }
+      console.log(thisBooking.starters);
+    }
+  }
+
+
+  sendOrder(){
     const thisBooking = this;
 
     const url = settings.db.url + '/' + settings.db.booking;
+    console.log(url);
 
     const payload = {
       date: thisBooking.datePicker.value,
       hour: thisBooking.hourPicker.value,
-      table: parseInt(thisBooking.selectedTable),
+      table: thisBooking.selectedPlace,
       duration: thisBooking.hoursAmountWidget.value,
       ppl: thisBooking.peopleAmountWidget.value,
       starters: [],
@@ -317,21 +358,27 @@ class Booking {
       address: thisBooking.dom.address.value,
     };
 
-    for(let starter of thisBooking.starters) {
+    for(let starter of thisBooking.starters){
       payload.starters.push(starter);
     }
+
+    console.log(payload);
 
     const options = {
       method: 'POST',
       headers: {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(payload),
     };
 
-    fetch(url, options)
-      .then(thisBooking.makeBooked(payload.date, payload.hour, payload.duration, parseInt(payload.table)))
-      .then(location.reload());
+    fetch(url, options);
+
+    for (let item in payload){
+      thisBooking.makeBooked(item.date, utils.numberToHour(item.hour), item.duration, item.table);
+
+      location.reload();
+    }
   }
 }
 
