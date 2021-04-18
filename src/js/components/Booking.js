@@ -19,8 +19,6 @@ class Booking {
 
     /* call the getDate method with no argument */
     thisBooking.getData();
-
-    thisBooking.initTables();
   }
 
   getData(){
@@ -134,7 +132,7 @@ class Booking {
   updateDOM(){
     const thisBooking = this;
 
-    thisBooking.selectedTable = null;
+    thisBooking.selectedPlace = null;
     thisBooking.date = thisBooking.datePicker.value;
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
 
@@ -236,7 +234,6 @@ class Booking {
 
     thisBooking.dom.wrapper.addEventListener('updated', function(){
       thisBooking.updateDOM();
-      thisBooking.initTables();
     });
 
     thisBooking.dom.eachTables.addEventListener('click', function(event){
@@ -255,49 +252,6 @@ class Booking {
     });
   }
 
-  initTables(event){
-    const thisBooking = this;
-    //console.log(event)
-    let clickedElement = event.toElement;
-    //console.log(clickedElement)
-
-    // check if clicked element is a table
-    if (clickedElement.classList.contains('table')){
-      // when it's a table, check if not contains class 'booked' and 'selected'
-
-      if ((!clickedElement.classList.contains(classNames.booking.tableBooked)) && (!clickedElement.classList.contains(classNames.booking.tableSelected))) {
-        // find data-table of clicked element
-        clickedElement.classList.add(classNames.booking.tableSelected);
-        let dataTable = clickedElement.getAttribute(settings.booking.tableIdAttribute);
-        //console.log(dataTable);
-        //add data-table of clicked element to new property in constructor
-        thisBooking.selectedPlace = dataTable;
-        //make a loop for a table to find a tableId (data-table)
-
-        for(let table of thisBooking.dom.tables){
-          let tableId = table.getAttribute(settings.booking.tableIdAttribute);
-
-          // check if any of the tables have already been selected
-          if (tableId !== dataTable && table.classList.contains(classNames.booking.tableSelected)){
-            // when yes, remove class 'selected' from the table and add class 'selected' to clicked element
-            table.classList.remove(classNames.booking.tableSelected);
-            clickedElement.classList.add(classNames.booking.tableSelected);
-          }
-        }
-      }
-
-      // when it's a table and was already clicked - remove class 'selected'
-      else if (clickedElement.classList.contains(classNames.booking.tableSelected)){
-        clickedElement.classList.remove(classNames.booking.tableSelected);
-      }
-
-      // when it's a table and was already booked - display alert
-      else if (clickedElement.classList.contains(classNames.booking.tableBooked)){
-        alert('This table is not available');
-      }
-    }
-  }
-
   bookTable(event){
     const thisBooking = this;
 
@@ -314,12 +268,12 @@ class Booking {
           activeTable.classList.remove(classNames.booking.tableSelected);
         }
         clickedElement.classList.add(classNames.booking.tableSelected);
-        thisBooking.selectedTable = tableNumber;
+        thisBooking.selectedPlace = tableNumber;
       } else if(!clickedElement.classList.contains(classNames.booking.tableBooked)
         && 
         clickedElement.classList.contains(classNames.booking.tableSelected)){ 
         clickedElement.classList.remove(classNames.booking.tableSelected);
-        thisBooking.selectedTable = null;
+        thisBooking.selectedPlace = null;
       } else { 
         alert('This table is not available at the moment. Please select another one.');
       }
