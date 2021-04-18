@@ -132,7 +132,6 @@ class Booking {
   updateDOM(){
     const thisBooking = this;
 
-    thisBooking.selectedPlace = null;
     thisBooking.date = thisBooking.datePicker.value;
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
 
