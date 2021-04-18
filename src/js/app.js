@@ -8,10 +8,10 @@ const app = {
     const thisApp = this;
     
     /* find container of booking*/
-    thisApp.bookingContainer = document.querySelector(select.containerOf.booking);
+    thisApp.bookingWrapper = document.querySelector(select.containerOf.booking);
 
     /* create new instance for class Booking */
-    new Booking(thisApp.bookingContainer);
+    new Booking(thisApp.bookingWrapper);
   },
 
   initPages: function(){
@@ -25,7 +25,7 @@ const app = {
     let pageMatchingHash = thisApp.pages[0].id;
 
     for(let page of thisApp.pages){
-      if(page.id ==idFromHash){
+      if(page.id == idFromHash){
         pageMatchingHash = page.id;
         break;
       }
@@ -121,10 +121,10 @@ const app = {
     // console.log('settings:', settings);
     // console.log('templates:', templates);
 
-    thisApp.initBooking();
     thisApp.initPages();
-    thisApp.initData(); 
+    thisApp.initData();
     thisApp.initCart();
+    thisApp.initBooking();
   },
 };
 
