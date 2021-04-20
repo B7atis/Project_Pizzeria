@@ -41,7 +41,7 @@ class HomePage {
         event.preventDefault();
 
         const boxLinkId = boxLink.getAttribute('data-link');
-        console.log('boxLinkId:', boxLinkId);
+        // console.log('boxLinkId:', boxLinkId);
 
         app.activatePage(boxLinkId);
         window.location.hash = '#/' + boxLinkId;

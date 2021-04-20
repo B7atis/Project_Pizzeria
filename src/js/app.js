@@ -119,7 +119,7 @@ const app = {
 
     const homePageElem = document.querySelector(select.containerOf.homePage);
     thisApp.homePage = new HomePage(homePageElem);
-    console.log('homePageElem:', homePageElem);
+    // console.log('homePageElem:', homePageElem);
   },
 
   init: function(){
