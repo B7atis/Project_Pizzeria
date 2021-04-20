@@ -86,3 +86,106 @@ section .boxes {
     text-transform: uppercase;
   }
 }
+
+/* Carousel */
+
+.carousel-cell {
+  display: flex;
+  width: 100%;
+
+  .carousel-image {
+    width: 32%;
+    height: 200px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: $radius;
+    }
+  }
+
+  .carousel-description {
+    width: 66%;
+    height: 200px;
+    padding-left: ($base-size * 2);
+
+    h3 {
+      text-transform: uppercase;
+    }
+
+    .author {
+      font-style: italic;
+    }
+  }
+}
+
+/* Gallery */
+
+.gallery-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -34px 0 -6px;
+}
+
+.gallery-image {
+  height: 200px;
+  width: 30%;
+  position: relative;
+  margin: 6px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: $radius;
+    z-index: 100;
+  }
+
+  .gallery-inner {
+    position: absolute;
+    color: $color-light;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    opacity: 0;
+    z-index: 103;
+
+    i {
+      padding: 6px;
+
+      &:hover {
+        color: $color-main;
+        cursor: pointer;
+        transition: $transition;
+      }
+    }
+  }
+
+  &::after {
+    position: absolute;
+    content: '';
+    background: $color-dark;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    z-index: 102;
+  }
+
+  &:hover::after {
+    opacity: 0.5;
+  }
+
+  &:hover .gallery-inner{
+    opacity: 1;
+    transition: $transition;
+  }
+}
+
+.gallery-wrapper a {
+  color: $color-main;
+  padding: 6px;
+  margin: 12px 0;
+}

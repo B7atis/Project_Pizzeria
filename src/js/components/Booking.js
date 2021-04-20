@@ -288,16 +288,6 @@ class Booking {
     }
   }
 
-  resetTables() {
-    const thisBooking = this;
-
-    for(const table of thisBooking.dom.tables) {
-      table.classList.remove(classNames.booking.tableSelected);
-      //thisBooking.selectedTable.shift();
-    } 
-  }
-
-
   sendOrder(){
     const thisBooking = this;
 
