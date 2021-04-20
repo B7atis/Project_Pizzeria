@@ -6,23 +6,25 @@
   border-radius: $radius;
 }
 
+section {
+  padding: ($base-size * 6) 0;
+}
+
 /* Section boxes */
 
 section .boxes {
-  display: flex;
+  padding-top: 0;
+}
+
+.boxes-wrapper {
   flex-direction: column;
   color: $color-light;
   text-align: center;
 }
 
 .box {
-  height: 100px;
+  height: 120px;
   border-radius: $radius;
-
-  a {
-    text-decoration: none;
-    color: $color-light;
-  }
 }
 
 .box-title {
@@ -39,7 +41,7 @@ section .boxes {
 
     .box-inner {
       color: $color-light;
-      transform: translate(0, 33%);
+      transform: translate(0, 46%);
       transition: 1s;
 
       p {
@@ -49,7 +51,7 @@ section .boxes {
 
     &:hover {
       .box-inner {
-        transform: translate(0, 10%);
+        transform: translate(0, 20%);
 
         p {
           visibility: visible;
@@ -74,7 +76,7 @@ section .boxes {
 .openning-hours {
   width: 100%;
   background-color: $color-main;
-  margin: 3px 0 0 0;
+  margin-top: 3px;
   display: flex;
   align-items: center;
   justify-content: center;
