@@ -186,14 +186,14 @@ class Product{
     // app.cart.add(thisProduct);
     // app.cart.add(thisProduct.prepareCartProduct());
 
-    const event = new CustomEvent('add-to-cart', {
+    const event = new CustomEvent('add-to-cart', { // Drugi argument to obiekt z ustawieniami tego eventu
       bubbles: true,
       detail: {
         product: thisProduct,
       },
     });
 
-    thisProduct.element.dispatchEvent(event);
+    thisProduct.element.dispatchEvent(event); // Wywołanie eventu. Na elemencie DOM
   }
 
   prepareCartProduct(){

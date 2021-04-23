@@ -38,13 +38,13 @@ class Cart{
       thisCart.dom.wrapper.classList.toggle(classNames.cart.wrapperActive);
     });
     thisCart.dom.productList.addEventListener('updated', function(){
-      thisCart.update();
+      thisCart.update(); //Dodany kod w celu nasłuchania customowego eventu, który idzie bąbelkuje dzięki bubbles na przodków w górę
     });
     thisCart.dom.productList.addEventListener('remove', function(event){
-      thisCart.remove(event.detail.cartProduct);
+      thisCart.remove(event.detail.cartProduct); // W ten sposób odbieramy teraz instancję thisCartProduct i przekazujemy ją do metody thisCart.remove
     });
     thisCart.dom.form.addEventListener('submit', function(event){
-      event.preventDefault();
+      event.preventDefault(); // Aby jego wysyłka nie przeładowywała strony
       thisCart.sendOrder();
     });
   }

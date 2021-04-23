@@ -18,12 +18,13 @@ const app = {
   initPages: function(){
     const thisApp = this;
 
-    thisApp.pages = document.querySelector(select.containerOf.pages).children;
+    thisApp.pages = document.querySelector(select.containerOf.pages).children; // Wszystkie dzieci konterera podstron
     thisApp.navLinks = document.querySelectorAll(select.nav.links);
 
     const idFromHash = window.location.hash.replace('#/', '');
 
-    let pageMatchingHash = thisApp.pages[0].id;
+    let pageMatchingHash = thisApp.pages[0].id; // Zapisujemy thisApp.pages[0].id a nie false , bo jakbyśmy wpisali ręcznie niepoprawy hash 
+    // podstrony to żadna z podstron by sie nie wyświetliła, a tak to wyświetli się pierwsza postrona
 
     for(let page of thisApp.pages){
       if(page.id == idFromHash){
@@ -32,7 +33,7 @@ const app = {
       }
     }
 
-    thisApp.activatePage(pageMatchingHash);
+    thisApp.activatePage(pageMatchingHash); // Zapisujemy która z podstron ma się wyświetlać pierwsza
 
     for(let link of thisApp.navLinks){
       link.addEventListener('click', function(event){
@@ -46,7 +47,8 @@ const app = {
         thisApp.activatePage(id);
 
         /* change URL hash */
-        window.location.hash = '#/' + id;
+        window.location.hash = '#/' + id; // Dodajemy /, żeby zlikwidować domyślne działania przeglądarki, tzn żeby po odświeżeniu 
+        // nie zjeżdżało okno w dół do miejsca gdzie zaczyna element o nazwie #order
       });
     }
   },
@@ -55,13 +57,14 @@ const app = {
     const thisApp = this;
 
     /* add class "active" to matching pages, remove from non-matching */
-    for(let page of thisApp.pages){ 
+    for(let page of thisApp.pages){  // W .toggle za pomocą drugiego argumentu możemy kontrolować to czy klasa zostanie nadana, czy nie!! 
+      // Możemy tu użyć warunku takiego jak w bloku if!!
       page.classList.toggle(classNames.pages.active, page.id == pageId);
     }
 
     /* add class "active" to matching links, remove from non-matching */
     for(let link of thisApp.navLinks){ 
-      link.classList.toggle(
+      link.classList.toggle( // Możemy to rozbić na taki zapis
         classNames.nav.active, 
         link.getAttribute('href') == '#' + pageId
       );
@@ -93,7 +96,8 @@ const app = {
         thisApp.data.products = parsedResponse;
 
         /* execute initMenu method */
-        thisApp.initMenu();
+        thisApp.initMenu(); //Przenieśliśmy tutaj wywołanie tej funkcji w związku z asynchronicznością API, inaczej initMenu 
+        // uruchamiałby się, zanim skrypt otrzymałby listę produktów
       });
 
     //console.log('thisApp.data', JSON.stringify(thisApp.data));

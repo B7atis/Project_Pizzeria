@@ -21,7 +21,7 @@ class Booking {
     thisBooking.getData();
   }
 
-  getData(){
+  getData(){ // Będzie pobierać dane z API używając adresów z parametrami filtrującymi wyniki
     const thisBooking = this;
 
     const startDateParam = settings.db.dateStartParamKey + '=' + utils.dateToStr(thisBooking.datePicker.minDate);
@@ -48,16 +48,16 @@ class Booking {
 
     const urls = {
       booking:       settings.db.url + '/' + settings.db.booking 
-                                     + '?' + params.booking.join('&'),
+                                     + '?' + params.booking.join('&'), // Zawiera adres endpointu API, który zwróci nam listę rezerwacji
       eventsCurrent: settings.db.url + '/' + settings.db.event   
-                                     + '?' + params.eventsCurrent.join('&'),
+                                     + '?' + params.eventsCurrent.join('&'), // Zwróci listę wydarzeń jednorazowych
       eventsRepeat:  settings.db.url + '/' + settings.db.event   
-                                     + '?' + params.eventsRepeat.join('&'),
+                                     + '?' + params.eventsRepeat.join('&'), // Zwróci liste wydarzeń cyklicznych
     };
 
     // console.log('getData urls', urls);
 
-    Promise.all([
+    Promise.all([ // Pobieramy z API listę rezerwacji
       fetch(urls.booking),
       fetch(urls.eventsCurrent),
       fetch(urls.eventsRepeat),
@@ -98,8 +98,13 @@ class Booking {
 
     for(let item of eventsRepeat){
       if(item.repeat == 'daily'){
-        for(let loopDate = minDate; loopDate <= maxDate; loopDate = utils.addDays(loopDate, 1)){
-          thisBooking.makeBooked(utils.dateToStr(loopDate), item.hour, item.duration, item.table);
+        // for(let loopDate = minDate; loopDate <= maxDate; utils.addDays(loopDate, 1)) {  // Jak zostawimy w ten sposób to przeglądarka się 
+        // zwiesi, bo jest to niekończąca się pętla, ponieważ nie zapisujemy nigdzie ostaniego wyrażenia
+        for(let loopDate = minDate; loopDate <= maxDate; loopDate = utils.addDays(loopDate, 1)){ // Kolejna pętla, tutaj są wydarzenia 
+          // cykliczne, czyli nie tylko data jednego dnia. Iterujemy po jakimś zakresie dat od min do max date. Na dacie nie możemy 
+          // zrobić ++ więc posłuży do tego funkcja addDays(obiekt daty, liczba dni)
+          thisBooking.makeBooked(utils.dateToStr(loopDate), item.hour, item.duration, item.table); // Korzystamy z dateToStr(), żeby 
+          // skonwertować datę na tekst w odpowiednim formacie
         }
       }
     }
@@ -112,31 +117,34 @@ class Booking {
   makeBooked(date, hour, duration, table){
     const thisBooking = this;
 
-    if(typeof thisBooking.booked[date] == 'undefined'){
-      thisBooking.booked[date] = {};
+    if(typeof thisBooking.booked[date] == 'undefined'){ // Sprawdzamy, czy mamy już jakiś wpis dla tej daty
+      thisBooking.booked[date] = {}; // Jeśli nie to chcemy stworzyć pusty obiek
     }
 
-    const startHour = utils.hourToNumber(hour);
+    const startHour = utils.hourToNumber(hour); // Konwersja godziny do liczby (12:30 do 12,5)
 
-    for(let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5){
+    for(let hourBlock = startHour; hourBlock < startHour + duration; hourBlock += 0.5){ // hourBlock to 0.5 godzinny blok czasowy. 
+      // Same as for(index=0; index<3; index++){} //w konsoli będzie index=0, index=1, index=2
       // console.log('loop', hourBlock);
 
-      if(typeof thisBooking.booked[date][hourBlock] == 'undefined'){
+      if(typeof thisBooking.booked[date][hourBlock] == 'undefined'){ // Wykonujemu podobne sprawdzenie jak wcześniej dla daty
         thisBooking.booked[date][hourBlock] = [];
       }
   
-      thisBooking.booked[date][hourBlock].push(table); 
+      thisBooking.booked[date][hourBlock].push(table); // Dodajemy numery stolików do naszego obiektu z datami i godzinami
     }
   }
 
   updateDOM(){
     const thisBooking = this;
-    thisBooking.date = thisBooking.datePicker.value;
+    thisBooking.date = thisBooking.datePicker.value; // Razem z kodem poniżej są to wartości wybrane aktualnie przez użytkownika
     thisBooking.hour = utils.hourToNumber(thisBooking.hourPicker.value);
 
-    let allAvailable = false;
+    let allAvailable = false; // Ta zmienna oznacza, że tego dnia wszystkie stoliki są dostępne, narazie ma false
 
-    if(
+    if( 
+      // Jeśli okaże się, że w obiekcie thisBooking.booked dla tej daty nie ma obiektu lub dla tej daty i godziny nie istnieje tablica 
+      // będzie to oznaczało, że żaden stolik nie jest zajęty, czyli wszystkie stoliki są dostępne, wtedy allAvailabele zmieni wartość na true 
       typeof thisBooking.booked[thisBooking.date] == 'undefined'
       ||
       typeof thisBooking.booked[thisBooking.date][thisBooking.hour] == 'undefined'
@@ -144,7 +152,8 @@ class Booking {
       allAvailable = true;
     }
 
-    for(let table of thisBooking.dom.tables){
+    for(let table of thisBooking.dom.tables){ // Uruchamiamy pętlę, która będzie iterować przez wszystkie stoliki widoczne na mapie 
+      // na stronie booking. Pobieramy id aktulnego stolika. Sprawdzamy czy numer stolika jest liczbą
      
       let tableId = table.getAttribute(settings.booking.tableIdAttribute);
       if(!isNaN(tableId)){
@@ -152,7 +161,8 @@ class Booking {
       }
 
       if(
-        !allAvailable
+        !allAvailable // Sprawdzamy czy nie wszystkie stoliki są dostępne, czyli czy któryś stolik jest zajęty, dalej sprawdzamy 
+        // czy któryś stolik jest zajęty 
         &&
         thisBooking.booked[thisBooking.date][thisBooking.hour].includes(tableId)
       ){
